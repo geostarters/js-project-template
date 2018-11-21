@@ -1,0 +1,7 @@
+toc:
+  - name: Geography & Geometry
+    description: |
+      `LatLon` and `LatLonBounds` represent points and rectanges in geographic
+      coordinates.
+  - LatLon
+  - LatLonBounds
