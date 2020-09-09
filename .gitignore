@@ -4,9 +4,7 @@ node_modules
 _batfish_site
 _batfish_tmp
 /docs/**/*
-/dist/project-template-dev.js
-/dist/project-template.js
-/dist/project-template.js.map
+/dist
 *.js.map
 node_modules
 npm-debug.log
@@ -16,3 +14,4 @@ flow-coverage
 .DS_Store
 .nyc_output
 .eslintcache
+.env

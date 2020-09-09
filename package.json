@@ -1,6 +1,6 @@
 {
   "name": "project-template",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A javascript project template",
   "author": "@geostarters",
   "main": "dist/index.js",
@@ -10,38 +10,92 @@
     "url": "git://github.com/geostarters/js-project-template.git"
   },
   "engines": {
-    "node": ">=6.4.0"
+    "node": ">=8.x"
+  },
+  "files": [
+    "build/",
+    "dist/",
+    "flow-typed/",
+    "src/",
+    ".flowconfig"
+  ],
+  "scripts": {
+    "build-dev": "browserify src/index.js --debug --ignore-transform unassertify --standalone project-template > dist/project-template.js",
+    "watch-dev": "watchify src/index.js --debug --ignore-transform unassertify --standalone project-template --outfile dist/project-template-dev.js --verbose",
+    "build-min": "browserify src/index.js --debug --plugin [minifyify --map project-template.js.map --output dist/project-template.js.map] --standalone project-template | derequire > dist/project-template.js",
+    "build-react": "run-s lint build-unflow",
+    "build-web": "run-s lint build-min",
+    "build-node": "run-s lint build-unflow build-modules",
+    "build-all": "run-s test clean build-web build-react build-modules",
+    "build-unflow": "flow-remove-types  src/ --out-dir dist/es/",
+    "build-modules": "babel --plugins @babel/plugin-transform-modules-commonjs dist/es/ --out-dir dist/commonjs/",
+    "build-docs": "documentation build --github --format json --config ./docs/documentation.yml --output docs/components/api.json src/index.js",
+    "lint": "eslint --fix --cache --ignore-path .gitignore src",
+    "lint-docs": "documentation lint src/index.js",
+    "clean": "run-s clean:dist",
+    "clean:dist": "rimraf dist/*",
+    "open": "node build/dev-server.js",
+    "pre-production": "run-s lint build-min test test-cov",
+    "start-server": "st --no-cache -H 127.0.0.1 --port 9966 --index index.html .",
+    "start": "run-p watch-dev start-server open",
+    "test": "run-s lint test-unit",
+    "test-unit": "jest",
+    "test-flow": "flow src",
+    "test-cov": "jest --coverage",
+    "test-watch": "jest --watch",
+    "prepush": "npm run lint & npm run test:unit",
+    "precommit": "npm run lint"
   },
   "devDependencies": {
-    "browserify": "^15.2.0",
-    "coveralls": "^3.0.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-flow-strip-types": "^7.8.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.0",
+    "@babel/preset-env": "^7.3.4",
+    "@geostarters/eslint-config": "0.0.6",
+    "babel-eslint": "10.0.3",
+    "babel-jest": "^25.1.0",
+    "babelify": "10.0.0",
+    "brfs": "^2.0.2",
+    "browserify": "^16.5.0",
+    "bubleify": "^1.1.0",
     "derequire": "^2.0.6",
-    "documentation": "^5.3.5",
+    "documentation": "^12.1.4",
     "envify": "^4.1.0",
-    "eslint-plugin-html": "^4.0.2",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-react": "^7.6.1",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-node": "^11.0.0",
     "execcommand-copy": "^1.1.0",
-    "flow-bin": "^0.64.0",
-    "flow-coverage-report": "^0.4.1",
-    "flow-remove-types": "^1.2.3",
-    "github-slugger": "^1.2.0",
+    "flow-bin": "^0.120.1",
+    "flow-coverage-report": "^0.6.1",
+    "flow-remove-types": "^2.120.1",
     "glob": "^7.1.2",
+    "husky": "^4.2.3",
     "in-publish": "^2.0.0",
+    "jest": "24.9.0",
     "minifyify": "^7.3.5",
     "npm-run-all": "^4.1.2",
+    "open": "^7.2.1",
     "package-json-versionify": "^1.0.4",
-    "present": "^1.0.0",
-    "prismjs": "^1.11.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-helmet": "^5.2.0",
-    "st": "^1.2.2",
+    "rimraf": "^3.0.2",
+    "unassertify": "^2.1.0",
+    "unflowify": "^1.0.1",
     "watchify": "^3.10.0"
   },
   "browserify": {
     "transform": [
       "unflowify",
+      [
+        "babelify",
+        {
+          "presets": [
+            "env",
+            "es2015",
+            "stage-0"
+          ]
+        }
+      ],
       [
         "bubleify",
         {
@@ -56,37 +110,5 @@
       "unassertify",
       "brfs"
     ]
-  },
-  "scripts": {
-    "build-dev": "browserify src/index.js --debug --ignore-transform unassertify --standalone project-template > dist/project-template.js",
-    "watch-dev": "watchify src/index.js --debug --ignore-transform unassertify --standalone project-template --outfile dist/project-template-dev.js --verbose",
-    "build-min": "browserify src/index.js --debug --plugin [minifyify --map project-template.js.map --output dist/project-template.js.map] --standalone project-template | derequire > dist/project-template.js",
-    "start-server": "st --no-cache -H 127.0.0.1 --port 9966 --index index.html .",
-    "start": "run-p watch-dev start-server open",
-    "open": "node build/dev-server.js",
-    "build-docs": "documentation build --github --format json --config ./docs/documentation.yml --output docs/components/api.json src/index.js",
-    "lint": "eslint --fix --cache --ignore-path .gitignore src test",
-    "lint-docs": "documentation lint src/index.js",
-    "test": "run-s lint test-flow test-unit",
-    "test-unit": "tap --reporter classic --no-coverage test/unit",
-    "test-flow": "flow .",
-    "test-cov": "nyc --require=flow-remove-types/register --reporter=text-summary --reporter=lcov --cache npm run test-unit",
-    "pre-production": "run-s lint build-min test test-cov"
-  },
-  "files": [
-    "build/",
-    "dist/",
-    "flow-typed/",
-    "src/",
-    ".flowconfig"
-  ],
-  "dependencies": {
-    "@geostarters/eslint-config": "0.0.1",
-    "brfs": "^1.4.4",
-    "bubleify": "^1.1.0",
-    "opn": "^5.3.0",
-    "tap": "^11.1.0",
-    "unassertify": "^2.1.0",
-    "unflowify": "^1.0.1"
   }
 }

@@ -1,5 +1,5 @@
 // @flow
-"use strict";
+
 
 /**
  * A `LatLon` object represents a given latitude and longitude coordinates.
@@ -9,10 +9,7 @@
  * @example
  * var ll = new LatLon(42.10376, 1.84584);
  */
-class LatLon {
-
-	lat: number;
-	lon: number;
+export default class LatLon {
 
 	constructor(lat: number, lon: number) {
 
@@ -80,5 +77,3 @@ class LatLon {
 	}
 
 }
-
-module.exports = LatLon;

@@ -1,7 +1,7 @@
 // @flow
-"use strict";
 
-const LatLon = require("./latlon");
+
+import LatLon from "./latlon";
 
 /**
  * A `LatLonBounds` represents a geographical bounding box,
@@ -14,10 +14,7 @@ const LatLon = require("./latlon");
  * var ne = new LatLon(42.90816, 3.317178);
  * var llb = new LatLonBounds(sw, ne);
  */
-class LatLonBounds {
-
-	ne: LatLon;
-	sw: LatLon;
+export default class LatLonBounds {
 
 	constructor(sw: LatLon, ne: LatLon) {
 
@@ -89,5 +86,3 @@ class LatLonBounds {
 	}
 
 }
-
-module.exports = LatLonBounds;

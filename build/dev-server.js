@@ -1,7 +1,7 @@
 // @flow
 "use strict";
 
-const opn = require("opn");
+const open = require("open");
 
-opn("http://localhost:9966/");
+open("http://localhost:9966/");
 
